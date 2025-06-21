@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>WiFightClub Diagnostics Dashboard</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen;
+      margin: 2rem auto;
+      max-width: 900px;
+      padding: 0 1rem;
+    }
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+    p {
+      margin-bottom: 2rem;
+      color: #555;
+    }
+    iframe {
+      width: 100%;
+      height: 480px;
+      border: 1px solid #ccc;
+      margin-bottom: 3rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>📡 WiFightClub: Network Diagnostics</h1>
+  <p>This dashboard shows WiFi and connectivity data collected from devices in the Plaid WeWork environment. It’s meant to help engineers diagnose unstable connections, poor signal strength, or packet loss over time.</p>
+
+  <h2>Signal Strength Over Time (RSSI)</h2>
+  <p>Lower RSSI (more negative) means weaker signal. Spikes downward can indicate interference, poor coverage, or moving between access points.</p>
+  <iframe src="rssi_plot.html"></iframe>
+
+  <h2>Packet Loss % Over Time</h2>
+  <p>Shows percentage of lost packets to 8.8.8.8 over time. Even small amounts of loss can disrupt video/audio calls. Spikes often correlate with disconnections or network congestion.</p>
+  <iframe src="packet_loss_plot.html"></iframe>
+</body>
+</html>
