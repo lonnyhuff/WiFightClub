@@ -1,69 +1,62 @@
-#!/usr/bin/env python3
+import os
 import json
 import pandas as pd
 import plotly.express as px
-from pathlib import Path
 from datetime import datetime
 
-DATA_DIR = Path("data")
-DOCS_DIR = Path("docs")
+DATA_DIR = "data"
+DOCS_DIR = "docs"
 
-def load_all_diagnostics():
-    records = []
+def load_logs():
+    logs = []
+    for filename in os.listdir(DATA_DIR):
+        if filename.endswith(".json"):
+            path = os.path.join(DATA_DIR, filename)
+            with open(path, "r") as f:
+                try:
+                    logs.append(json.load(f))
+                except json.JSONDecodeError:
+                    print(f"⚠️ Skipping invalid JSON: {filename}")
+    return logs
 
-    for file in DATA_DIR.glob("*.json"):
-        try:
-            with open(file) as f:
-                entry = json.load(f)
-                timestamp = entry.get("timestamp")
-                wifi = entry.get("wifi_info", {})
-                ping = entry.get("ping_summary", "")
-                record = {
-                    "timestamp": timestamp,
-                    "RSSI": int(wifi.get("agrCtlRSSI", -999)),
-                    "Noise": int(wifi.get("agrCtlNoise", -999)),
-                    "Channel": wifi.get("channel"),
-                    "SSID": wifi.get("SSID"),
-                    "ping_summary": ping
-                }
-
-                # Extract packet loss
-                loss_line = [l for l in ping.split("\n") if "packet loss" in l]
-                if loss_line:
-                    try:
-                        percent = loss_line[0].split(",")[2].strip().split("%")[0]
-                        record["packet_loss_percent"] = float(percent)
-                    except:
-                        record["packet_loss_percent"] = None
-                else:
-                    record["packet_loss_percent"] = None
-
-                records.append(record)
-        except Exception as e:
-            print(f"⚠️ Failed to parse {file.name}: {e}")
-            continue
-
-    return pd.DataFrame(records)
-
-def plot_metric(df, y_col, title, out_file):
-    if df.empty or y_col not in df.columns:
-        print(f"⚠️ No data to plot for {y_col}")
-        return
-
+def build_dataframe(logs):
+    rows = []
+    for log in logs:
+        if 'timestamp' in log and 'wifi_signal' in log and 'ping_stats' in log:
+            rows.append({
+                'timestamp': log['timestamp'],
+                'rssi': log['wifi_signal'],
+                'packet_loss_percent': log['ping_stats'].get('packet_loss_percent'),
+                'avg_latency_ms': log['ping_stats'].get('avg_latency_ms'),
+            })
+    df = pd.DataFrame(rows)
     df['timestamp'] = pd.to_datetime(df['timestamp'])
-    df = df.sort_values('timestamp')
+    return df.sort_values(by="timestamp")
 
-    fig = px.line(df, x="timestamp", y=y_col, title=title, markers=True)
-    fig.update_layout(xaxis_title="Time", yaxis_title=y_col)
-    DOCS_DIR.mkdir(parents=True, exist_ok=True)
-    fig.write_html(DOCS_DIR / out_file)
-    print(f"✅ Wrote {out_file}")
+def make_plot(df, y, title, y_label, filename):
+    fig = px.line(df, x='timestamp', y=y, title=title)
+    fig.update_layout(
+        xaxis_title='Time',
+        yaxis_title=y_label,
+        template='plotly_white'
+    )
+    path = os.path.join(DOCS_DIR, filename)
+    fig.write_html(path)
+    print(f"✅ Plot written to {path}")
 
 def main():
-    df = load_all_diagnostics()
+    logs = load_logs()
+    if not logs:
+        print("🚫 No diagnostics_log.json found.")
+        return
 
-    plot_metric(df, "RSSI", "WiFi Signal Strength Over Time", "rssi_plot.html")
-    plot_metric(df, "packet_loss_percent", "Packet Loss % Over Time", "packet_loss_plot.html")
+    df = build_dataframe(logs)
+
+    make_plot(df, 'rssi', 'WiFi Signal Strength Over Time', 'RSSI', 'rssi_plot.html')
+    make_plot(df, 'packet_loss_percent', 'Packet Loss % Over Time', 'packet_loss_percent', 'packet_loss_plot.html')
+    make_plot(df, 'avg_latency_ms', 'Ping Latency Over Time', 'Average Latency (ms)', 'latency_plot.html')
+
+    print("📉 All plots updated.")
 
 if __name__ == "__main__":
     main()
