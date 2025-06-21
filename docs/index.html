@@ -3,40 +3,62 @@
 <head>
   <meta charset="UTF-8">
   <title>WiFightClub Diagnostics Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen;
-      margin: 2rem auto;
-      max-width: 900px;
-      padding: 0 1rem;
+      font-family: system-ui, sans-serif;
+      margin: 2rem;
+      background: #f5f5f5;
+      color: #333;
     }
-    h1 {
-      font-size: 2rem;
-      margin-bottom: 0.5rem;
+    h1, h2 {
+      color: #222;
     }
-    p {
-      margin-bottom: 2rem;
-      color: #555;
-    }
-    iframe {
-      width: 100%;
-      height: 480px;
+    .plot {
       border: 1px solid #ccc;
-      margin-bottom: 3rem;
+      background: #fff;
+      margin: 1rem 0;
+      padding: 1rem;
+    }
+    a {
+      color: #0077cc;
     }
   </style>
 </head>
 <body>
-  <h1>📡 WiFightClub: Network Diagnostics</h1>
-  <p>This dashboard shows WiFi and connectivity data collected from devices in the Plaid WeWork environment. It’s meant to help engineers diagnose unstable connections, poor signal strength, or packet loss over time.</p>
+  <h1>📡 WiFightClub</h1>
+  <p>Welcome to the sketchy WiFi showdown. This dashboard monitors and logs intermittent WiFi disruptions, packet loss, and latency so engineers can tell if it’s WeWork... or just you.</p>
 
-  <h2>Signal Strength Over Time (RSSI)</h2>
-  <p>Lower RSSI (more negative) means weaker signal. Spikes downward can indicate interference, poor coverage, or moving between access points.</p>
-  <iframe src="rssi_plot.html"></iframe>
+  <h2>📈 Connection Quality</h2>
 
-  <h2>Packet Loss % Over Time</h2>
-  <p>Shows percentage of lost packets to 8.8.8.8 over time. Even small amounts of loss can disrupt video/audio calls. Spikes often correlate with disconnections or network congestion.</p>
-  <iframe src="packet_loss_plot.html"></iframe>
+  <div class="plot">
+    <h3>📶 Signal Strength Over Time</h3>
+    <p>Like your confidence on a Friday — higher is better. If this dips too low, expect sadness.</p>
+    <iframe src="signal_plot.html" width="100%" height="400"></iframe>
+  </div>
+
+  <div class="plot">
+    <h3>🕳️ Packet Loss</h3>
+    <p>Even one lost packet can ruin a Zoom call. Spikes here = 👎.</p>
+    <iframe src="packet_loss_plot.html" width="100%" height="400"></iframe>
+  </div>
+
+  <div class="plot">
+    <h3>⏱️ Latency Trends</h3>
+    <p>Slow internet isn’t just annoying, it’s measurable. Look here for proof of pain.</p>
+    <iframe src="latency_plot.html" width="100%" height="400"></iframe>
+  </div>
+
+  <h2>📁 Archived Logs</h2>
+  <p>These are downloadable bundles of older diagnostics. Handy for sharing or debugging like a pro.</p>
+  <ul>
+    <li><a href="../archive/2025-06-21.zip">2025-06-21.zip</a></li>
+    <!-- Add more entries as needed -->
+  </ul>
+
+  <footer>
+    <hr>
+    <p><em>Built by engineers who just wanted better WiFi.</em></p>
+  </footer>
 </body>
 </html>
-<!-- refresh trigger -->
