@@ -2,11 +2,12 @@
 import os
 import time
 import shutil
-import json
 import datetime
 import subprocess
 from pathlib import Path
 from dotenv import load_dotenv
+
+from collector import collect
 
 # Set up paths
 BASE = Path(__file__).resolve().parent
@@ -24,35 +25,13 @@ INTERVAL = 300  # in seconds (5 mins)
 RETENTION_DAYS = 7
 
 def collect_diagnostics():
-    timestamp = datetime.datetime.utcnow().isoformat()
-    try:
-        airport_cmd = ["/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport", "-I"]
-        wifi_raw = subprocess.check_output(airport_cmd, text=True)
-        wifi = {}
-        for line in wifi_raw.strip().split("\n"):
-            if ":" in line:
-                key, val = line.strip().split(":", 1)
-                wifi[key.strip()] = val.strip()
-    except Exception as e:
-        wifi = {"error": str(e)}
+    """Collect diagnostics using the collector module and save them."""
+    # ensure we're in repo base so collector writes to the correct folder
+    os.chdir(BASE)
 
-    try:
-        ping_raw = subprocess.check_output(["ping", "-c", "100", "-i", "0.1", "8.8.8.8"], text=True)
-    except Exception as e:
-        ping_raw = f"Ping failed: {e}"
-
-    diag = {
-        "timestamp": timestamp,
-        "wifi_info": wifi,
-        "ping_summary": ping_raw
-    }
-
-    DATA_DIR.mkdir(exist_ok=True)
-    file_path = DATA_DIR / f"{timestamp.replace(':', '-')}.json"
-    with open(file_path, "w") as f:
-        json.dump(diag, f, indent=2)
-
-    print(f"✅ Collected diagnostics at {timestamp}")
+    data = collect.collect_data()
+    collect.save_log(data)
+    print(f"✅ Collected diagnostics at {data['timestamp']}")
 
 def archive_old_logs():
     now = datetime.datetime.utcnow()
