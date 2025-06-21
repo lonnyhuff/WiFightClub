@@ -1,0 +1,13 @@
+{
+  "timestamp": "2025-06-21T14:37:19.482746",
+  "wifi_signal": -55,
+  "ping_stats": {
+    "packet_loss_percent": 0.0,
+    "avg_latency_ms": 7.0
+  },
+  "disconnect_events": [
+    {
+      "error": "log command failed (permissions or SIP)"
+    }
+  ]
+}
