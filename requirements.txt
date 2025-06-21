@@ -1,0 +1,6 @@
+psutil
+pandas
+plotly
+matplotlib
+click
+python-dotenv
