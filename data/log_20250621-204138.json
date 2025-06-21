@@ -1,0 +1,10 @@
+{
+  "timestamp": "2025-06-21T20:41:22.898138",
+  "wifi_stats": {
+    "error": "Failed to run wdutil: Command '['sudo', 'wdutil', 'info']' timed out after 5 seconds"
+  },
+  "ping_stats": {
+    "packet_loss_percent": 0.0,
+    "avg_latency_ms": 6.193
+  }
+}
