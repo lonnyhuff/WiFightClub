@@ -1,0 +1,13 @@
+{
+  "timestamp": "2025-06-25T05:50:03.742458",
+  "wifi_stats": {
+    "ssid": "<redacted>",
+    "rssi": -42,
+    "tx_rate": 286.0,
+    "noise": -96,
+    "channel": "5g161/20"
+  },
+  "ping_stats": {
+    "error": "Failed to parse ping output"
+  }
+}
