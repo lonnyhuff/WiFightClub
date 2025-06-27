@@ -1,0 +1,13 @@
+{
+  "timestamp": "2025-06-27T04:08:22.858500",
+  "wifi_stats": {
+    "ssid": "<redacted>",
+    "rssi": -41,
+    "tx_rate": 286.0,
+    "noise": -94,
+    "channel": "5g40/20"
+  },
+  "ping_stats": {
+    "error": "Ping failed: Command '['ping', '-c', '100', '-i', '0.1', '8.8.8.8']' timed out after 20 seconds"
+  }
+}
