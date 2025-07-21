@@ -1,0 +1,14 @@
+{
+  "timestamp": "2025-07-21T14:51:33.227456",
+  "wifi_stats": {
+    "ssid": "<redacted>",
+    "rssi": -54,
+    "tx_rate": 0.0,
+    "noise": -95,
+    "channel": "5g116/20"
+  },
+  "ping_stats": {
+    "packet_loss_percent": 0.0,
+    "avg_latency_ms": 6.009
+  }
+}
